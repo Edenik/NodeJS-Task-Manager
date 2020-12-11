@@ -54,5 +54,27 @@ app.post('/tasks', (req, res) => {
 })
 
 
+app.get('/tasks', (req, res) => {
+  Task.find({}).then((tasks) => {
+      res.send(tasks)
+  }).catch((error) =>{
+      res.status(500).send()
+  })
+})
+
+app.get('/tasks/:id', (req, res) => {
+    const _id = req.params.id
+
+    Task.findById(_id).then((task) => {
+        if(!task){
+            res.status(404).send()
+        }
+        res.send(task)
+    }).catch((error)=>{
+        res.status(500).send()
+    })
+
+})
+
 app.listen(port, () => `Server running on port ${port}`);
 
