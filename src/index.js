@@ -73,6 +73,24 @@ app.patch('/users/:id', async (req, res) => {
     }
 })
 
+
+// Delete user by id
+app.delete('/users/:id', async (req, res) => {
+    const _id = req.params.id
+
+    try {
+        const user = await User.findByIdAndDelete(_id)
+
+        if(!user){
+            return res.status(404).send()
+        }
+        
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 // *******Tasks endpoints*******
 
 // Post new task
@@ -112,6 +130,8 @@ app.get('/tasks/:id', async (req, res) => {
     }
 })
 
+
+// Update task by id
 app.patch('/tasks/:id', async (req, res) => {
     const _id = req.params.id
     const updates = Object.keys(req.body)
@@ -132,6 +152,23 @@ app.patch('/tasks/:id', async (req, res) => {
         res.send(task)
     } catch (e) {
         res.status(400).send(e)
+    }
+})
+
+
+app.delete('/task/:id', async (req, res) => {
+    const _id = req.params.id
+
+    try {
+        const task = await Task.findByIdAndDelete(_id)
+
+        if(!task){
+            return res.status(404).send()
+        }
+        
+        res.send(task)
+    } catch (e) {
+        res.status(500).send()
     }
 })
 
