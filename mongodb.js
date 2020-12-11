@@ -1,62 +1,52 @@
 // CRUD create read update delete
 
-const mongodb = require('mongodb')
-const MongoClient = mongodb.MongoClient
+const { MongoClient, ObjectID } = require('mongodb')
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
 
+
 MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
-    if(error){
-       return console.log('Unable to connect to database!')
+    if (error) {
+        return console.log('Unable to connect to database!')
     }
-    
+
     const db = client.db(databaseName)
 
-    // db.collection('users').insertOne({
-    //     name:'Esdasdsaden',
-    //     age:25
-    // }, (error , result) => {
+    // db.collection('users').findOne({_id : new ObjectID("5fd2983cf979f023546352d8")}, (error,user) => {
     //     if(error){
-    //         return console.log('Unable to insert user')
+    //         return console.log('Unable to fetch')
+    //     } else if(!user){
+    //         return console.log('No user found')
     //     }
-
-    //     console.log(result.ops)
+    //     console.log(user)
     // })
 
-    // var array = [{
-    //     name:'alon',
-    //     age:26
-    // }, {
-    //     name:'daniel',
-    //     age:24
-    // }];
-    // db.collection('users').insertMany(array, (error,result) => {
-    //     if(error){
-    //         return console.log('Unable to insert documents!')
-    //     }
-
-    //     console.log(result.ops)
+    // db.collection('users').find({age:25}).toArray((error,users) =>{
+    //     console.log(users)
     // })
 
-    var tasks = [{
-        description:'buy shoes',
-        completed:false,
-    },{
-        description:'complete this course',
-        completed:false,
-    },{
-        description:'get a new job',
-        completed:false,
-    }]
+    // db.collection('users').find({age:25}).count((error,count) =>{
+    //     console.log(count)
+    // })
 
-    db.collection('tasks').insertMany(tasks,(error,result) => {
+    // db.collection('tasks').findOne({_id : new ObjectID("5fd295b3c28cd003fcd38fee")}, (error, task) => {
+    //     if(error){
+    //        return console.log('Unable to fetch task')
+    //     } else if(!task){
+    //         return console.log('There is no task with this id')
+    //     }
+
+    //     console.log(task)
+    // })
+
+    db.collection('tasks').find({completed: false}).toArray((error,tasks) => {
         if(error){
-            return console.log('Unable to add tasks')
-        }
-        
-        console.log(result.ops)
+            return console.log('Unable to fetch tasks')
+        } else if(tasks.length ===0){
+            return console.log('No tasks found')
+        } 
+        console.log(tasks)
     })
-
 })
 
