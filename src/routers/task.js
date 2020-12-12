@@ -20,10 +20,9 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-// Get all tasks
+// Get all tasks for current user
 router.get('/tasks', auth, async (req, res) => {
     try {
-        // const tasks = await Task.find({owner:req.body._id})
         const user = req.user
         await user.populate('tasks').execPopulate()
         res.send(user.tasks)
@@ -33,11 +32,11 @@ router.get('/tasks', auth, async (req, res) => {
 })
 
 // Get task by id
-router.get('/tasks/:id', async (req, res) => {
+router.get('/tasks/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
-        const task = await Task.findById(_id)
+        const task = await Task.findOne({ _id, owner: req.user._id })
         if (!task) {
             res.status(404).send()
         }
@@ -49,8 +48,7 @@ router.get('/tasks/:id', async (req, res) => {
 
 
 // Update task by id
-router.patch('/tasks/:id', async (req, res) => {
-    const _id = req.params.id
+router.patch('/tasks/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['description', 'completed']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -60,14 +58,14 @@ router.patch('/tasks/:id', async (req, res) => {
     }
 
     try {
-        const task = await Task.findById(_id)
-        updates.forEach((update) => user[update] = req.body[update])
-
-        await task.save()
+        const task = await Task.findOne({ _id: req.params.id, owner: req.user._id })
 
         if (!task) {
             return res.status(404).send()
         }
+
+        updates.forEach((update) => task[update] = req.body[update])
+        await task.save()
 
         res.send(task)
     } catch (e) {
@@ -75,12 +73,10 @@ router.patch('/tasks/:id', async (req, res) => {
     }
 })
 
-
-router.delete('/task/:id', async (req, res) => {
-    const _id = req.params.id
-
+// Delete task by id
+router.delete('/tasks/:id', auth, async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(_id)
+        const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
 
         if (!task) {
             return res.status(404).send()
@@ -88,6 +84,7 @@ router.delete('/task/:id', async (req, res) => {
 
         res.send(task)
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 })
