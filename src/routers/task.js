@@ -1,27 +1,32 @@
 const express = require('express')
 const Task = require('../models/task')
-
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 // *******Tasks endpoints*******
 
 // Post new task
-router.post('/tasks', async (req, res) => {
-    const task = new Task(req.body)
+router.post('/tasks', auth, async (req, res) => {
+    const task = new Task({
+        ...req.body,
+        owner: req.user._id
+    })
 
     try {
         await task.save()
-        res.status(201).send(result)
+        res.status(201).send(task)
     } catch (e) {
-        res.status(400).send(error)
+        res.status(400).send(e)
     }
 })
 
 // Get all tasks
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({})
-        res.send(tasks)
+        // const tasks = await Task.find({owner:req.body._id})
+        const user = req.user
+        await user.populate('tasks').execPopulate()
+        res.send(user.tasks)
     } catch (e) {
         res.status(500).send()
     }
@@ -77,10 +82,10 @@ router.delete('/task/:id', async (req, res) => {
     try {
         const task = await Task.findByIdAndDelete(_id)
 
-        if(!task){
+        if (!task) {
             return res.status(404).send()
         }
-        
+
         res.send(task)
     } catch (e) {
         res.status(500).send()
