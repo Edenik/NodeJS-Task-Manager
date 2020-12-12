@@ -63,7 +63,7 @@ router.get('/users/me', auth, async (req, res) => {
 })
 
 // Update user by id
-router.patch('/users/me',auth, async (req, res) => {
+router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -83,7 +83,7 @@ router.patch('/users/me',auth, async (req, res) => {
 
 
 // Delete user by id
-router.delete('/users/me',auth, async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
         res.send(req.user)
@@ -93,10 +93,20 @@ router.delete('/users/me',auth, async (req, res) => {
 })
 
 
-// Upload avater image
+// Upload avatar image
 const upload = multer({
-    dest:'avatars'
+    dest: 'avatars',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image file'))
+        }
+        cb(undefined, true)
+    }
 })
+
 router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
     res.send()
 })
