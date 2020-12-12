@@ -8,45 +8,45 @@ Demo: <a href="https://task-manager-with-node-js.herokuapp.com/"> LIVE DEMO - He
 Endpoints: 
 https://task-manager-with-node-js.herokuapp.com
 
-// Create a user
-POST: /users
+// Create a user <br>
+POST: /users <br>
 body: {
     'name' : 'name',
     'email' : 'email',
     'password' : 'password',
     'age' : 'age'
-}
+} <br>
 
 
-// Login user
-POST: /users/login
+// Login user <br>
+POST: /users/login <br>
 body: {
     'email' : 'email',
     'password' : 'password'
-}
+} 
 
-// Logout corrent session
+// Logout corrent session <br>
 POST: /users/logout
 
-// Logout all sessions
+// Logout all sessions <br>
 POST: /users/logoutAll
 
-// Get current user profile
+// Get current user profile <br>
 GET: /users/me
 
-// Update user profile
+// Update user profile <br>
 PATCH: /users/me
 
-// Delete user
+// Delete user <br>
 DELETE: /users/me
 
-// Post user avatar image
+// Post user avatar image <br>
 POST: /users/me/avatar
 
-// Delete user avatar
+// Delete user avatar <br>
 DELETE: /users/me/avatar
 
-// Get user avatar by id
+// Get user avatar by id <br>
 GET: /users/:id/avatar
 
 Dependencies:
@@ -61,15 +61,3 @@ Dependencies:
 <p><a href="https://github.com/lovell/sharp"> sharp </a></p>
 <p><a href="https://github.com/chriso/validator.js"> validator </a></p>
 <p><a href="https://github.com/request/request#readme"> request </a></p>
-
-
-
-
-
-
-
-    "mongoose": "^5.11.7",
-    "multer": "^1.4.2",
-    "nodemon": "^2.0.6",
-    "sharp": "^0.26.3",
-    "validator": "^13.5.2"
