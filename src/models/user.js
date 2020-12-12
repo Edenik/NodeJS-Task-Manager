@@ -50,11 +50,13 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps:true,
 })
 
 userSchema.virtual('tasks', {
     ref: 'Task',
-    localField:'_id',
+    localField: '_id',
     foreignField: 'owner',
 })
 
@@ -104,8 +106,8 @@ userSchema.pre('save', async function (next) {
 
 
 // Delete user tasks when user is removed
-userSchema.pre('remove',async function(next) {
-    await Task.deleteMany({owner:this._id})
+userSchema.pre('remove', async function (next) {
+    await Task.deleteMany({ owner: this._id })
     next()
 })
 
