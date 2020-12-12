@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const Task = require('./task')
 
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
@@ -98,6 +99,13 @@ userSchema.pre('save', async function (next) {
         this.password = await bcrypt.hash(this.password, 8)
     }
 
+    next()
+})
+
+
+// Delete user tasks when user is removed
+userSchema.pre('remove',async function(next) {
+    await Task.deleteMany({owner:this._id})
     next()
 })
 
