@@ -45,7 +45,7 @@ router.post('/users/logout', auth, async (req, res) => {
 })
 
 // Logout all sessions
-router.post('/users/logoutAll',auth, async(req, res) => {
+router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = []
         await req.user.save()
@@ -55,7 +55,8 @@ router.post('/users/logoutAll',auth, async(req, res) => {
         res.status(500).send()
     }
 })
-// Get all users
+
+// Get current user profile
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
